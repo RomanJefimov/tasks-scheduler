@@ -12,7 +12,7 @@ def db_start():
     global conn, cur
     conn = sqlite3.connect("tasks_db.db")
     cur = conn.cursor()
-    cur.execute("""CREATE TABLE IF NOT EXISTS notes_table (completed bool, task text, date text)""")
+    cur.execute("""CREATE TABLE IF NOT EXISTS notes_table (completed bool, task text, date date)""")
 
 def loading_data():
     """Загружает данные из базы данных в дерево."""
@@ -23,9 +23,9 @@ def loading_data():
             tree.insert("", "end", values=(row[1], row[2], "X"), tags="checked")
         else:
             tree.insert("", "end", values=(row[1], row[2], "X"), tags="unchecked")
-
+               
 def processing_events(e):
-    """Реагирует на событие по которому было кликнуто"""
+    """Реагирует на событие по которому было нажато"""
     try:
         selected_item = tree.selection()[0]
         values = tree.item(selected_item, option="values")
@@ -36,7 +36,7 @@ def processing_events(e):
                 tree.item(rowid, tags="unchecked")
                 cur.execute("""UPDATE notes_table SET completed = ? WHERE task = ?""", ("False", values[0],))
                 conn.commit()
-            else: 
+            else:
                 tree.item(rowid, tags="checked")
                 cur.execute("""UPDATE notes_table SET completed = ? WHERE task = ?""", ("True", values[0],))
                 conn.commit()
@@ -52,7 +52,7 @@ def processing_events(e):
 def add(task):
     """Добавляет новую задачу"""
     tree.insert('', 'end', values=(task, f'{datetime.now():%d-%m-%y %H:%M:%S}', "X"),tags="unchecked")
-    cur.execute("INSERT INTO notes_table (completed, task, date) VALUES (?, ?, ?)", (False, task, f"{datetime.datetime.now():%d-%m-%y %H:%M:%S}"))
+    cur.execute("INSERT INTO notes_table (completed, task, date) VALUES (?, ?, ?)", (False, task, f"{datetime.now():%d-%m-%y %H:%M:%S}"))
     conn.commit()
 
 def add_task():
@@ -72,22 +72,22 @@ root.title("Планировщик задач")
 root.geometry("850x400")
 root.resizable(0, 0)
 
-"""Стииль для древа"""
+"""Стиль для древа"""
 style = ttk.Style()
 style.theme_use("default")
-style.configure("Treeview", background="#2a2d2e", foreground="white", rowheight=25, fieldbackground="#343638", bordercolor="#343638", borderwidth=0)
+style.configure("Treeview", background="#D6D5D5", foreground="black", rowheight=25, fieldbackground="#343638", bordercolor="#343638", borderwidth=0)
 style.map("Treeview", background=[("selected", "#22559b")])
 style.configure("Treeview.Heading", background="#565b5e", foreground="white", relief="flat")
 style.map("Treeview.Heading", background=[("active", "#3484F0")])
 
-"""Иконки для задач"""
-im_checked = PhotoImage("checked", data=b'GIF89a\x0e\x00\x0e\x00\xf0\x00\x00\x00\x00\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x0e\x00\x0e\x00\x00\x02#\x04\x82\xa9v\xc8\xef\xdc\x83k\x9ap\xe5\xc4\x99S\x96L^\x83qZ\xd7\x8d$\xa8\xae\x99\x15ZL#\xd3\xa9"\x15\x00;')
-im_unchecked = PhotoImage("unchecked", data=b'GIF89a\x0e\x00\x0e\x00\xf0\x00\x00\x00\x00\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x0e\x00\x0e\x00\x00\x02\x1e\x04\x82\xa9v\xc1\xdf"|i\xc2j\x19\xce\x06q\xed|\xd2\xe7\x89%yZ^J\x85\x8d\xb2\x00\x05\x00;')
+"""Иконки для задач"""                                                           
+img_checked = PhotoImage("checked", data=b'GIF89a\x0e\x00\x0e\x00\xf0\x00\x00\x00\x00\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x0e\x00\x0e\x00\x00\x02#\x04\x82\xa9v\xc8\xef\xdc\x83k\x9ap\xe5\xc4\x99S\x96L^\x83qZ\xd7\x8d$\xa8\xae\x99\x15ZL#\xd3\xa9"\x15\x00;')
+img_unchecked = PhotoImage("unchecked", data=b'GIF89a\x0e\x00\x0e\x00\xf0\x00\x00\x00\x00\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x0e\x00\x0e\x00\x00\x02\x1e\x04\x82\xa9v\xc1\xdf"|i\xc2j\x19\xce\x06q\xed|\xd2\xe7\x89%yZ^J\x85\x8d\xb2\x00\x05\x00;')
 
 """Создание дерева"""
 tree = ttk.Treeview(root)
-tree.tag_configure("checked", image=im_checked)
-tree.tag_configure("unchecked", image=im_unchecked)
+tree.tag_configure("checked", image=img_checked)
+tree.tag_configure("unchecked", image=img_unchecked)
 tree["columns"] = ("column1", "column2", "column3", "column4")
 tree.heading("#0", text="Статус")
 tree.column("#0", width=50)
@@ -96,7 +96,7 @@ tree.column("#1", width=600)
 tree.heading("#2", text="Дата")
 tree.column("#2", width=100)
 tree.heading("#3", text="Удалить")
-tree.column("#3", width=60, anchor=CENTER)
+tree.column("#3", width=100, anchor=CENTER)
 tree.pack()
 
 """Кнопка добавления задач"""
