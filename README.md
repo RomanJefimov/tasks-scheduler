@@ -10,3 +10,4 @@
 Версия Python 3.12.6
 # Установите зависимости из `requirements.txt`
     pip install -r requirements.txt
+Контакты: Roman.Jefimov@ivkhk.ee
