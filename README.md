@@ -11,4 +11,5 @@
 # Установите зависимости из `requirements.txt`
     pip install -r requirements.txt
 Контакты: Roman.Jefimov@ivkhk.ee
+<br>
 #Чтобы запустит проект необходимо зайти в папку с проектом с помощью командной панели(например: cd Место/место) и затем написать python main.py
