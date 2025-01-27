@@ -10,6 +10,7 @@
 Версия Python 3.12.6
 # Установите зависимости из `requirements.txt`
     pip install -r requirements.txt
-Контакты: Roman.Jefimov@ivkhk.ee
-<br>
 Чтобы запустить проект необходимо зайти в папку с проектом с помощью командной строки (например: cd Место/место) и затем написать python main.py
+<br>
+Контакты: Roman.Jefimov@ivkhk.ee
+
